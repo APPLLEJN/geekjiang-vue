@@ -5,7 +5,7 @@
   "author": "jiangnan <229142144@qq.com>",
   "private": true,
   "scripts": {
-    "start": "node build/dev-server.js",
+    "start": "nodemon build/dev-server.js",
     "build": "node build/build.js",
     "unit": "karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
@@ -13,10 +13,14 @@
   },
   "dependencies": {
     "babel-runtime": "^5.8.0",
-    "mongoose": "^4.4.11",
+    "mocha": "^2.4.5",
+    "mongodb": "^1.4.40",
+    "mongoose": "^4.4.12",
+    "monk": "^1.0.1",
+    "nodemon": "^1.9.1",
     "vue": "^1.0.18",
     "vue-resource": "^0.7.0",
-    "vue-router": "^0.7.11"
+    "vue-router": "^0.7.13"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",

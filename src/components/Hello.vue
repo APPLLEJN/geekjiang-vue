@@ -5,11 +5,11 @@
       <fieldset>
           <div class="pure-control-group">
               <label for="name">Username</label>
-              <input id="name" type="text" placeholder="Username" v-model=userName>
+              <input id="name" type="text" placeholder="Username" v-model="userName">
           </div>
           <div class="pure-control-group">
               <label for="password">Password</label>
-              <input id="password" type="password" placeholder="Password" v-model=passWord>
+              <input id="password" type="password" placeholder="Password" v-model="passWord">
           </div>
       </fieldset>
       <button type="button" class="pure-button pure-button-primary" v-on:click="login">Submit</button>
@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import Vue from 'vue'
+
 export default {
   data () {
     return {
@@ -25,7 +27,9 @@ export default {
       // with hot-reload because the reloaded component
       // preserves its current state and we are modifying
       // its initial state.
-      msg: 'Hello World!'
+      msg: 'Hello World!',
+      userName: '',
+      passWord: '',
     }
   },
   methods: {
@@ -33,11 +37,12 @@ export default {
       let self = this
       if (!self.passWord) return
       if (!self.userName) return
-      console.log(self.passWord, self.userName)
-      // 方法内 `this` 指向 vm
-      // alert('Hello ' + this.name + '!')
-      // // `event` 是原生 DOM 事件
-      // alert(event.target.tagName)
+      this.$http.post('/api/login', {userName: self.userName, passWord: self.passWord}, {emulateJSON: false, emulateHTTP: true}).then(function (response) {
+          // success callback
+        self.$route.router.go({name: 'home'})
+      }, function (response) {
+          // error callback
+      })
     }
   }
 }

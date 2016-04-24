@@ -1,8 +1,16 @@
 import Vue from 'vue'
-import App from './App'
+import VueRouter from 'vue-router'
+import VueResource from 'vue-resource'
+import routerMap from './routers'
+Vue.use(VueResource)
+Vue.use(VueRouter);
 
-/* eslint-disable no-new */
-new Vue({
-  el: 'body',
-  components: { App }
-})
+let router = new VueRouter({
+    hashbang: false,
+    history: true,
+    saveScrollPosition: true,
+    transitionOnLoad: true
+});
+let app = Vue.extend({});
+routerMap(router);
+router.start(app, "#app");

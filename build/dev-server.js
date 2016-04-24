@@ -1,31 +1,22 @@
 var express = require('express')
 var webpack = require('webpack')
 var config = require('./webpack.dev.conf')
-var proxyMiddleware = require('http-proxy-middleware')
-
+var bodyParser = require('body-parser');
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || 3050
-
 var app = express()
 var compiler = webpack(config)
-
-// Define HTTP proxies to your custom API backend
-// https://github.com/chimurai/http-proxy-middleware
-var proxyTable = {
-  // '/api': {
-  //   target: 'http://jsonplaceholder.typicode.com',
-  //   changeOrigin: true,
-  //   pathRewrite: {
-  //     '^/api': ''
-  //   }
-  // }
-}
+// var mongoose = require('mongoose');
+// var uri = 'mongodb://localhost/geekjiangAdmin';
+// global.db = mongoose.createConnection(uri);
+global.db = require('monk')('localhost/geekjiangAdmin');
+var routes = require('./routes')
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: config.output.publicPath,
   stats: {
     colors: true,
-    chunks: false
+    chunks: true
   }
 })
 
@@ -38,23 +29,7 @@ compiler.plugin('compilation', function (compilation) {
   })
 })
 
-var mongoose = require('mongoose');
 
-var uri = 'mongodb://localhost/geekjiangAdmin';
-global.db = mongoose.createConnection(uri);
-//var model = require('./model');
-app.get('/login', function(req, res) {
-  console.log(req, res)
-})
-
-// proxy api requests
-Object.keys(proxyTable).forEach(function (context) {
-  var options = proxyTable[context]
-  if (typeof options === 'string') {
-    options = { target: options }
-  }
-  app.use(proxyMiddleware(context, options))
-})
 
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
@@ -68,6 +43,34 @@ app.use(hotMiddleware)
 
 // serve pure static assets
 app.use('/static', express.static('./static'))
+
+db.on('error',console.error.bind(console,'连接错误:'));
+db.once('open',function(){
+ console.log('open db')
+});
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.post('/api/login', routes.login)
+
+app.use('/api', (req, res, next) => {
+  res.send({
+    result: true,
+    data: res.data || {},
+    time: Date.now(),
+  })
+})
+
+app.use('/api', (err, req, res, next) => {
+  if (err) {
+    const statusCode = err.status || err.statusCode
+    res.status(statusCode).json({
+      result: false,
+      error:statusCode,
+      reason: err.reason || null,
+      time: Date.now(),
+    })
+  }
+})
 
 module.exports = app.listen(port, function (err) {
   if (err) {

@@ -1,6 +1,5 @@
 <template>
-  <div id="app">
-    <img class="logo" src="./assets/logo.png">
+    <img class="logo" src="../assets/logo.png">
     <div class="pure-g">
       <div class="pure-u-1-3"></div>
       <div class="pure-u-1-3">
@@ -9,11 +8,10 @@
       <div class="pure-u-1-3"></div>
     </div>
 
-  </div>
 </template>
 
 <script>
-import Hello from './components/Hello'
+import Hello from './Hello'
 
 export default {
   components: {
