@@ -1,7 +1,7 @@
 var express = require('express')
 var webpack = require('webpack')
 var config = require('./webpack.dev.conf')
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser')
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || 3050
 var app = express()
@@ -9,7 +9,8 @@ var compiler = webpack(config)
 // var mongoose = require('mongoose');
 // var uri = 'mongodb://localhost/geekjiangAdmin';
 // global.db = mongoose.createConnection(uri);
-global.db = require('monk')('localhost/geekjiangAdmin');
+const db = require('monk')('localhost/geekjiangAdmin')
+global.db = db
 var routes = require('./routes')
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
@@ -29,8 +30,6 @@ compiler.plugin('compilation', function (compilation) {
   })
 })
 
-
-
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')())
 
@@ -44,30 +43,31 @@ app.use(hotMiddleware)
 // serve pure static assets
 app.use('/static', express.static('./static'))
 
-db.on('error',console.error.bind(console,'连接错误:'));
-db.once('open',function(){
- console.log('open db')
-});
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+db.on('error', console.error.bind(console, '连接错误:'))
+db.once('open', function () {
+  console.log('open db')
+})
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 app.post('/api/login', routes.login)
 
 app.use('/api', (req, res, next) => {
   res.send({
     result: true,
     data: res.data || {},
-    time: Date.now(),
+    time: Date.now()
   })
 })
 
 app.use('/api', (err, req, res, next) => {
-  if (err) {
+  if (!err) {
+  } else {
     const statusCode = err.status || err.statusCode
     res.status(statusCode).json({
       result: false,
-      error:statusCode,
+      error: statusCode,
       reason: err.reason || null,
-      time: Date.now(),
+      time: Date.now()
     })
   }
 })

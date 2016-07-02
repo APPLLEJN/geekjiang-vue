@@ -1,13 +1,12 @@
-var users = db.get('user');
+var users = db.get('users')
 
-exports.login = function(req, res, next) {
-  users.findOne({user: req.body.userName}, function(err, docs){
-    //if (err) throw err
-    if (docs && docs.password && (docs.password === req.body.passWord)) {
+exports.login = function (req, res, next) {
+  users.findOne({username: req.body.userName}, function(err, docs) {
+    if (docs && docs.password && (docs.password === +req.body.passWord)) {
       next()
       return
     }
-    next({reason: '出错啦！', status: 333})
+    next({reason: '出错啦！', status: 404})
     return
   })
 }
