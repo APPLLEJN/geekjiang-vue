@@ -1,6 +1,7 @@
+var autoprefixer = require('autoprefixer')
 var path = require('path')
-var cssLoaders = require('./css-loaders')
 var projectRoot = path.resolve(__dirname, '../')
+var cssLoaders = require('./css-loaders')
 var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
@@ -35,25 +36,22 @@ module.exports = {
         loader: 'eslint',
         include: projectRoot,
         exclude: /node_modules/
-      },
-      {
-        test: /\.scss$/,
-        include: projectRoot,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader')
       }
     ],
     loaders: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue'
       },
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader')
+        loader: ExtractTextPlugin.extract(
+                'style-loader', 'css-loader?sourceMap!sass-loader!cssnext-loader')
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader')
+        loader: ExtractTextPlugin.extract(
+            'style-loader', 'css-loader?sourceMap!cssnext-loader')
       },
       {
         test: /\.js$/,
@@ -79,15 +77,19 @@ module.exports = {
       }
     ]
   },
-  vue: {
-    loaders: cssLoaders()
+  babel: {
+    presets: ['es2015', 'stage-2'],
+    plugins: ['transform-runtime']
   },
   eslint: {
     formatter: require('eslint-friendly-formatter')
   },
-  plugin: [
-    new ExtractTextPlugin('style.css', {
-      allChunks: true
+  postcss: [
+    autoprefixer({
+      browsers: ['last 2 versions']
     })
-  ]
+  ],
+  vue: {
+    loaders: cssLoaders()
+  }
 }

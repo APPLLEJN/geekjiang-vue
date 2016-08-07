@@ -12,7 +12,7 @@
               <input id="password" type="password" placeholder="Password" v-model="passWord">
           </div>
       </fieldset>
-      <button type="button" class="pure-button pure-button-primary" v-on:click="login">Submit</button>
+      <my-button type="button" class="pure-button pure-button-primary" v-on:click="login" context="submit"></my-button>
     </form>
   </div>
 </template>
@@ -37,11 +37,15 @@ export default {
       if (!self.userName) return
       this.$http.post('/api/login', {userName: self.userName, passWord: self.passWord}, {emulateJSON: false, emulateHTTP: true}).then(function (response) {
           // success callback
-        self.$route.router.go({name: 'home'})
+        self.$route.router.go({name: 'list'})
       }, function (response) {
           // error callback
       })
     }
+  },
+  components: {
+    'hello': require('./Hello.vue'),
+    'my-button': require('../common/button.vue')
   }
 }
 </script>

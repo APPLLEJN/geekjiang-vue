@@ -50,6 +50,8 @@ db.once('open', function () {
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.post('/api/login', routes.login)
+app.get('/api/article/list', routes.articleList)
+app.post('/api/article', routes.article)
 
 app.use('/api', (req, res, next) => {
   res.send({

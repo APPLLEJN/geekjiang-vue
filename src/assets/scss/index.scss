@@ -8,7 +8,7 @@ body {
   justify-content: center;
   height: 100%;
   #app {
-    margin-top: -100px;
+    margin-top: 100px;
     width: 1200px;
     font-family: Helvetica, sans-serif;
     text-align: center;
@@ -16,6 +16,11 @@ body {
     .logo {
       width: 100px;
       height: 100px
+    }
+    button {
+      margin: 10px;
+      border-radius: 4px;
+      background-color: #42b983;
     }
   }
 }

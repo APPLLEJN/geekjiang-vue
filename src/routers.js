@@ -7,10 +7,16 @@ export default function (router) {
         require(['./components/Login'], resolve)
       }
     },
-    '/home': {
-      name: 'home',
+    '/list': {
+      name: 'list',
       component: function (resolve) {
-        require(['./components/Home'], resolve)
+        require(['./components/List'], resolve)
+      }
+    },
+    '/editor': {
+      name: 'editor',
+      component: function (resolve) {
+        require(['./components/Editor'], resolve)
       }
     }
   })
